@@ -1,11 +1,13 @@
 package br.com.sample.solutionbto.jdbc;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import br.com.sample.solutionbto.entity.Person;
@@ -15,10 +17,24 @@ public class PersonJbdcDao {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 	
+	class PersonRowMapper implements RowMapper<Person>{
+
+		@Override
+		public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Person person=new Person();
+			person.setId(rs.getInt("ID"));
+			person.setName(rs.getString("NAME"));
+			person.setLocation(rs.getString("LOCATION"));
+			person.setBirthDate(rs.getTimestamp("BIRTH_DATE"));
+			return person;
+		}
+		
+	}
+	
 	@SuppressWarnings("all")
 	public List<Person> findAll() {
 		return jdbcTemplate.query("select * from person", 
-				new BeanPropertyRowMapper(Person.class));
+				new PersonRowMapper());
 	}
 	
 	@SuppressWarnings("all")
@@ -26,7 +42,7 @@ public class PersonJbdcDao {
 		return (Person) jdbcTemplate.queryForObject(
 				"select * from person where id=?", 
 				new Object[] {id},
-				new BeanPropertyRowMapper(Person.class));
+				new PersonRowMapper());//new BeanPropertyRowMapper(Person.class));
 	}
 	
 	public int insert(Person person) {
