@@ -50,7 +50,7 @@ public class PersonJbdcDao {
 			return -1;
 		else
 			return jdbcTemplate.update(
-					"INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) "
+					"INSERT INTO person (ID, NAME, LOCATION, BIRTH_DATE ) "
 					+ "VALUES(?, ?, ?, ?)", 
 					new Object[] {
 							person.getId(), 
@@ -65,7 +65,7 @@ public class PersonJbdcDao {
 			return -1;
 		else
 			return jdbcTemplate.update(
-					"UPDATE PERSON SET NAME=? , LOCATION=?, BIRTH_DATE=?  "
+					"UPDATE person SET NAME=? , LOCATION=?, BIRTH_DATE=?  "
 					+ " WHERE ID=? ", 
 					new Object[] {
 							person.getName(), 
