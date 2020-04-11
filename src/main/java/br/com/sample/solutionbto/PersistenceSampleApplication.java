@@ -10,7 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.sample.solutionbto.entity.Person;
-import br.com.sample.solutionbto.jdbc.PersonJbdcDao;
+import br.com.sample.solutionbto.repository.PersonRepository;
 
 /**
  * basead in course: 
@@ -24,7 +24,7 @@ public class PersistenceSampleApplication implements CommandLineRunner {
 	private Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private PersonJbdcDao personJbdcDao;
+	private PersonRepository personRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(PersistenceSampleApplication.class, args);
@@ -32,21 +32,22 @@ public class PersistenceSampleApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		personJbdcDao.executeSqlScript();
 		
-		logger.info("All users -> {}",personJbdcDao.findAll());
-		Person person10001 = personJbdcDao.findById(10001);
+		logger.info("All users -> {}",personRepository.findAll());
+		Person person10001 = personRepository.findById(10001).orElse(null);
 		logger.info("Find by id=10001 -> {}", person10001);
-		logger.info("Delete user by id=10002, number of lines deleted -> {}",personJbdcDao.delete(10002));
+		personRepository.delete(personRepository.findById(10002).orElse(null));
+		logger.info("Delete user by id=10002, number of lines deleted -> {}", personRepository.findAll());
 		
 		Person person10004=new Person(10004, "Roberto", "XPTO", new Date());
-		logger.info("Insert user by id=10004, number of lines inserted -> {}",personJbdcDao.insert(person10004));
-		logger.info("Find by id={} -> {}", person10004.getId(), personJbdcDao.findById(person10004.getId()));
+		person10004 = personRepository.save(person10004);
+		logger.info("Insert user by id=10004, number of lines inserted -> {}", person10004);
 		
 		person10004.setName("Roberto Silva");
 		person10004.setLocation("São Paulo");
 		person10004.setBirthDate(new Date());
-		logger.info("Update user by id=10004, number of lines updated -> {}",personJbdcDao.update(person10004));
-		logger.info("Find by id={} -> {}", person10004.getId(), personJbdcDao.findById(person10004.getId()));
+		person10004 = personRepository.save(person10004);
+		logger.info("Update user by id=10004, number of lines updated -> {}", person10004);
+		logger.info("Find by id={} -> {}", person10004.getId(), personRepository.findById(person10004.getId()).orElse(null));
 	}
 }

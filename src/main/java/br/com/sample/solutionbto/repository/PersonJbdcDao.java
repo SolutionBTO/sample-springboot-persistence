@@ -1,4 +1,4 @@
-package br.com.sample.solutionbto.jdbc;
+package br.com.sample.solutionbto.repository;
 
 import java.io.IOException;
 import java.sql.Connection;
