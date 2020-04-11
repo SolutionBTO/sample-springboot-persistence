@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.sample.solutionbto</groupId>
 	<artifactId>sample-springboot-persistence</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>sample-springboot-persistence</name>
 	<description>Example for the JDBC and JPA</description>
 	<packaging>jar</packaging>
