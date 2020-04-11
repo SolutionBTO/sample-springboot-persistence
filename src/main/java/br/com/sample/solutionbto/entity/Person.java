@@ -1,10 +1,15 @@
 package br.com.sample.solutionbto.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 
 /**
  * 
@@ -12,16 +17,21 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class Person {
+@Table( name = "person")
+public class Person implements Serializable {
+
+	private static final long serialVersionUID = 7663699464904926139L;
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	private String name;
 	private String location;
 	private Date birthDate;
-
+	private Date createDate;
+	private Date updateDate;
+	
 	public Person() {
 		super();
 	}
@@ -65,11 +75,36 @@ public class Person {
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
+	
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+	
+	public Date getCreateDate() {
+		return createDate;
+	}
+	
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+	
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+	
+	@PrePersist
+	public void prePersist() {
+		this.createDate = new Date();
+	}
+	
+	@PreUpdate
+	public void preUpdate() {
+		this.updateDate = new Date();
+	}
 
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", location=" + location + ", birthDate=" + birthDate + "]\n";
-	}
-	
-	
+		return "Person [id=" + id + ", name=" + name + ", location=" + location + ", birthDate=" + birthDate
+				+ ", createDate=" + createDate + ", updateDate=" + updateDate + "]";
+	}	
 }

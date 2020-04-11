@@ -1,13 +1,18 @@
 package br.com.sample.solutionbto.jdbc;
 
+import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.init.ScriptException;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Repository;
 
 import br.com.sample.solutionbto.entity.Person;
@@ -30,6 +35,19 @@ public class PersonJbdcDao {
 		}
 		
 	}
+	
+	public void executeSqlScript()throws SQLException, ScriptException, IOException{
+		Connection connection  =jdbcTemplate.getDataSource().getConnection();
+        try {
+            connection.setAutoCommit(true);
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("data.sql"));
+            connection.commit();
+       } catch (SQLException e) {
+           connection.rollback();
+       }finally{
+           connection.close();
+       }
+    }
 	
 	@SuppressWarnings("all")
 	public List<Person> findAll() {

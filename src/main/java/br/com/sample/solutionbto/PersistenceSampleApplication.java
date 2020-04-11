@@ -32,6 +32,8 @@ public class PersistenceSampleApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		personJbdcDao.executeSqlScript();
+		
 		logger.info("All users -> {}",personJbdcDao.findAll());
 		Person person10001 = personJbdcDao.findById(10001);
 		logger.info("Find by id=10001 -> {}", person10001);
